@@ -9,13 +9,18 @@ import java.math.BigDecimal;
 public class CalculatorPresenter {
     private Calculator model;
     private Observer observer;
-    private boolean isDotPress = false;;
+    private boolean isDotPress = false;
+    private boolean isEqualPress = false;
 
     public CalculatorPresenter() {
         this.model = new Calculator();
     }
 
     public void appendNewDigi(int newDigi) {
+        if (isEqualPress) {
+            this.isEqualPress = false;
+            this.model.reset();
+        }
         this.model.setCurrentStrValue(this.model.getCurrentStrValue() + newDigi);
         this.model.updateCurr();
         this.isDotPress = false;
@@ -42,6 +47,7 @@ public class CalculatorPresenter {
             BigDecimal result = operation.eval(this.model);
             this.model.reset();
             this.model.setCurrentStrValue(result);
+            this.isEqualPress = true;
         }
 
         notifyChange();
